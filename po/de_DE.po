@@ -6,9 +6,9 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: anthra_1920_FSE\n"
-"Report-Msgid-Bugs-To: <>\n"
-"POT-Creation-Date: 2014-03-25 21:40+0100\n"
-"PO-Revision-Date: 2012-02-17 20:54+0100\n"
+"Report-Msgid-Bugs-To: <https://github.com/unf/vdr-skin-anthra-ose/issues>\n"
+"POT-Creation-Date: 2026-11-16 13:05+0100\n"
+"PO-Revision-Date: 2026-11-16 16:00+0100\n"
 "Last-Translator: Tomas Saxer <tsaxer@gmx.de>\n"
 "Language-Team: \n"
 "Language: de\n"
@@ -55,81 +55,62 @@ msgstr "Lautstärke "
 msgid "Mute"
 msgstr "Stumm"
 
-#~ msgid "until"
-#~ msgstr "bis"
+msgid "Channel logos"
+msgstr "Senderlogos"
 
-#~ msgid "hour"
-#~ msgstr "Uhr"
+msgid "Path of the channel logos"
+msgstr "Pfad der Senderlogos"
 
-#~ msgid "cutted"
-#~ msgstr "geschnitten"
+msgid "Separator logos"
+msgstr "Trennerlogos"
 
-#~ msgid "Channel"
-#~ msgstr "Kanal"
+msgid "Path of the separator logos"
+msgstr "Pfad der Trennerlogos"
 
-#~ msgid "Filesize"
-#~ msgstr "Dateigröße"
+msgid "Main menu logos"
+msgstr "Logos im Hauptmenü"
 
-#, fuzzy
-#~ msgid "Timer"
-#~ msgstr "Timer"
+msgid "Main menu font"
+msgstr "Schrift im Hauptmenü"
 
-#~ msgid "Now"
-#~ msgstr "Jetzt"
+msgid "Group lines in menus"
+msgstr "Gruppenzeilen in Menüs"
 
-#~ msgid "Next"
-#~ msgstr "Nächste"
+msgid "Timer info in the main menu"
+msgstr "Timer-Info im Hauptmenü"
 
-#~ msgid "Video"
-#~ msgstr "Video"
+msgid "EPG images (scraper)"
+msgstr "EPG-Bilder (Scraper)"
 
-#~ msgid "Applications"
-#~ msgstr "Applikationen"
+msgid "Recording images (scraper)"
+msgstr "Aufnahmebilder (Scraper)"
 
-#~ msgid "Web"
-#~ msgstr "Web"
+msgid "Signal display"
+msgstr "Signalanzeige"
 
-#~ msgid "Internet"
-#~ msgstr "Internet"
+msgid "left"
+msgstr "links"
 
-#~ msgid "Media"
-#~ msgstr "Medien"
+msgid "right"
+msgstr "rechts"
 
-#~ msgid "XBMC on graphtft Display"
-#~ msgstr "XBMC on graphtft Display"
+msgid "none"
+msgstr "keine"
 
-#~ msgid "Games"
-#~ msgstr "Spiele"
+msgid "default"
+msgstr "normal"
 
-#~ msgid "Tools"
-#~ msgstr "Tools"
+msgid "small"
+msgstr "klein"
 
-#~ msgid "Xterm"
-#~ msgstr "Xtrem"
+msgid "large"
+msgstr "groß"
 
-#~ msgid "System"
-#~ msgstr "System"
+msgid "center"
+msgstr "zentriert"
 
-#~ msgid "Safely remove usb mass storage"
-#~ msgstr "USB Massenspeicher sicher entfernen"
+msgid "graph"
+msgstr "Grafik"
 
-#~ msgid "Update vdr recordings list"
-#~ msgstr "Aufnahmen-Liste aktualisieren"
-
-#~ msgid "Restart vdr"
-#~ msgstr "VDR neu starten"
-
-#~ msgid "Reboot system"
-#~ msgstr "Rechner neu starten"
-
-#~ msgid "Shutdown system"
-#~ msgstr "System herunterfahren"
-
-#~ msgid "Audio"
-#~ msgstr "Audio"
-
-#~ msgid "Length"
-#~ msgstr "Länge"
-
-#~ msgid "bis"
-#~ msgstr "until"
+msgid "digit"
+msgstr "Zahlen"

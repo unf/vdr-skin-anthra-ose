@@ -1,9 +1,10 @@
 #
-#	Makefile for anthra_HD for text2skin
+#	Makefile for anthra_OSE for text2skin
 #
 #	based on text2skin Makefile.example by Thomas Günther <tom@toms-cafe.de>
 #
-#	Copyright (C) 2010 - 2014 Tomas Saxer <tsaxer@gmx.de>   
+#	Copyright (C) 2010-2014 Tomas Saxer <tsaxer@gmx.de>
+#	Copyright (C) 2026 Frank Neumann <fnu@vdr-portal.de> (text2skin 2.0 port)
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -18,222 +19,76 @@
 # You should have received a copy of the GNU General Public License along
 # with this program; if not, write to the Free Software Foundation, Inc.,
 # 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+#
+# The skin needs text2skin >= 2.0 (skin format 1.2). The skin file is put
+# together from xml/*.xml, there are no build options: the options of the
+# skin are set in the setup menu of text2skin, the skin scales itself to the
+# size of the OSD.
 
+SKIN = anthra_OSE
+MAIL = https://github.com/unf/vdr-skin-anthra-ose/issues
 
-SKIN = anthra_1920_OSE
-VERSION = 0.0.5
+### The directory environment (from vdr.pc if available):
 
--include Make.config
+PKGCFG     = $(shell pkg-config --variable=$(1) vdr 2>/dev/null)
+VDRCONFDIR ?= $(or $(call PKGCFG,configdir),/var/lib/vdr)
+LOCDIR     ?= $(or $(call PKGCFG,locdir),/usr/share/locale)
+
+DESTDIR   ?=
+SKINDIR    = $(VDRCONFDIR)/plugins/text2skin/$(SKIN)
+THEMESDIR  = $(VDRCONFDIR)/themes
 
 ### The main target:
 
 all: $(SKIN).skin i18n
 
+$(SKIN).skin: $(sort $(wildcard xml/*.xml))
+	cat $^ > $@
+
 ### Internationalization (I18N):
+
 PODIR     = po
 LOCALEDIR = locale
 
 I18Npo    = $(notdir $(wildcard $(PODIR)/*.po))
 I18Npot   = $(PODIR)/$(SKIN).pot
 
+# texts to translate: trans('...') in the skin, titles and values of the options
 $(I18Npot): $(SKIN).skin
-	@cat $^ | sed -e "s/('/(\"/g;s/')/\")/g" | grep -o "trans([^)]*)" | \
-	xgettext -C --no-wrap --no-location -k -ktrans \
-	         --msgid-bugs-address='<$(MAIL)>' -o $@ -
+	@{ sed -e "s/('/(\"/g;s/')/\")/g" $< | grep -o "trans([^)]*)"; \
+	   grep -o '<option [^>]*>' $< | sed -n 's/.* title="\([^"]*\)".*/trans("\1")/p'; \
+	   grep -o '<option [^>]*>' $< | sed -n 's/.* values="\([^"]*\)".*/\1/p' | tr ',' '\n' | sed 's/.*/trans("&")/'; } | \
+	xgettext -C --no-wrap --no-location -k -ktrans --from-code=UTF-8 \
+	         --package-name=vdr-text2skin-$(SKIN) --msgid-bugs-address='<$(MAIL)>' -o $@ -
 
 %.po: $(I18Npot)
-	@msgmerge -U --no-wrap --no-location --backup=none -q $@ $<
+	msgmerge -U --no-wrap --no-location --backup=none -q $@ $<
 	@touch $@
 
 $(LOCALEDIR)/%/LC_MESSAGES/vdr-text2skin-$(SKIN).mo: $(PODIR)/%.po
 	@mkdir -p $(dir $@)
-	@msgfmt -c -o $@ $<
+	msgfmt -c -o $@ $<
 
 i18n: $(I18Npo:%.po=$(LOCALEDIR)/%/LC_MESSAGES/vdr-text2skin-$(SKIN).mo)
 
 ### Targets:
 
-$(SKIN).skin:
-
-	@echo
-	@echo "$(SKIN)-$(VERSION) is generated with following settings:"; \
-	echo "----------------------------------------------------------"; \
-	
-	@cat xml/*.xml > $(SKIN).skin;
-	
-	@sed 's/VERSION/$(VERSION)/g' -i $(SKIN).skin;
-	
-	@if [ "$(VIDEOSIZE)" = "" ]; then\
-	  sed -e '/--VIDEOSIZE/d' -i $(SKIN).skin;\
-	  echo "- NO VIDEOSIZE";\
-	else\
-	  sed -e '/NOVIDEOSIZE/d' -i $(SKIN).skin;\
-	  echo "- VIDEOSIZE";\
-	fi
-		
-	@if [ "$(LOGOSLEFT)" = "1" -a -n "$(CHANNELLOGOSPATH)" ];then\
-	  sed 's/CHANNELLOGOSPATH/$(CHANNELLOGOSPATH)/g;/LOGOSRIGHT/d;/NOLOGOS/d' -i $(SKIN).skin;\
-	  echo "- LOGOSLEFT";\
-	  echo "- CHANNELLOGOSPATH: "$(CHANNELLOGOSPATH)"";\
-	fi
-	
-	@if [ "$(LOGOSLEFT)" = "1" -a -z "$(CHANNELLOGOSPATH)" ];then\
-	  sed '/LOGOSRIGHT/d;/NOLOGOS/d;' -i $(SKIN).skin;\
-	  echo "\033[93;41m  !!! ERROR !!! CHANNELLOGOS are activated,\
-	  you have to set CHANNELLOGOSPATH   \033[0m";\
-	fi
-	
-	@if [ "$(LOGOSRIGHT)" = "1" -a -n "$(CHANNELLOGOSPATH)" ];then\
-	  sed 's/CHANNELLOGOSPATH/$(CHANNELLOGOSPATH)/g;/LOGOSLEFT/d;/NOLOGOS/d;' -i $(SKIN).skin;\
-	  echo "- LOGOSRIGHT";\
-	  echo "- CHANNELLOGOSPATH: "$(CHANNELLOGOSPATH)"";\
-	fi	
-	
-	@if [ "$(LOGOSRIGHT)" = "1" -a -z "$(CHANNELLOGOSPATH)" ];then\
-	  sed '/LOGOSLEFT/d;/NOLOGOS/d;' -i $(SKIN).skin;\
-	  echo "\033[93;41m  !!! ERROR !!! CHANNELLOGOS are activated,\
-	  you have to set CHANNELLOGOSPATH   \033[0m";\
-	fi	
-	
-	@if [ "$(NOLOGOS)" = "1" ]; then\
-	  sed -e '/LOGOSLEFT/d;/LOGOSRIGHT/d;' -i $(SKIN).skin;\
-	  echo "- NOLOGOS"; \
-	fi
-		
-	@if [ "$(SEPARATORLOGOS-LEFT)" = "1" -o  "$(SEPARATORLOGOS-RIGHT)" = "1" ];then\
-	     if [ -z "$(SEPARATORLOGOSPATH)" ]; then\
-	       echo "\033[93;41m  !!! ERROR !!! SEPARATORLOGOS are activated,\
-	       you have to set   SEPARATORLOGOSPATH \033[0m";\
-	     elif [ "$(SEPARATORLOGOS-LEFT)" = "1" ]; then\
-	       sed -e '/SEPARATORLOGOS-RIGHT/d' -i $(SKIN).skin;\
-	       sed 's/SEPARATORLOGOSPATH/$(SEPARATORLOGOSPATH)/g' -i $(SKIN).skin;\
-	       echo "- SEPARATORLOGOS-LEFT";\
-	       echo "- SEPARATORLOGOSPATH: "$(SEPARATORLOGOSPATH)"";\
-	     else \
-	       sed -e '/SEPARATORLOGOS-LEFT/d' -i $(SKIN).skin;\
-	       sed 's/SEPARATORLOGOSPATH/$(SEPARATORLOGOSPATH)/g' -i $(SKIN).skin;\
-	       echo "- SEPARATORLOGOS-RIGHT";\
-	       echo "- SEPARATORLOGOSPATH: "$(SEPARATORLOGOSPATH)"";\
-	      fi \
-	fi
-
-	@if [ "$(MENULOGOS)" = "" ]; then\
-	  sed -e '/-MAINMENULOGOS--/d;/-MAINMENULOGOS-/d;' -i $(SKIN).skin;\
-	  echo "- NO MENULOGOS";\
-	else \
-	  sed -e'/NOMAINMENULOGOS/d' -i $(SKIN).skin;\
-	  if [ "$(yaVDR)" = "1" ]; then\
-	    cp anthra_conf/mainmenu_yavdr_menuorg anthra_conf/mainmenu_yavdr_menuorg.conf ;\
-	  fi;\
-	  pushd anthra_conf >/dev/null && ./anthra_conf.sh && popd >/dev/null;\
-	  echo "- MENULOGOS";\
-	  if [ "$(yaVDR)" = "1" ]; then\
-	    rm anthra_conf/mainmenu_yavdr_menuorg.conf ;\
-	    echo "- yaVDR-MENULOGOS";\
-	  fi; \
-	fi
-	
-	@if [ "$(EPGIMAGES)" = "" ];then\
-	  sed -e '/EPG-IMAGES/d;/NOEPGIM/d;' -i $(SKIN).skin ;\
-	  echo "- NO EPGIMAGES"; \
-	fi
-	 
-	@if [ "$(EPGIMAGES)" = "1" -a -n "$(EPGIMAGESPATH)" ]; then\
-	  sed 's/EPGIMAGESPATH/$(EPGIMAGESPATH)/g' -i $(SKIN).skin;\
-	  echo "- EPGIMAGES";\
-	  echo "- EPGIMAGESPATH: "$(EPGIMAGESPATH)"";\
-	  if [ "$(EPGIMAGESJPG)" = "" ]; then\
-	    echo "- EPGIMAGESFORMAT: png";\
-	  fi \
-	fi
-	
-	@if [ "$(EPGIMAGES)" = "1" -a -z "$(EPGIMAGESPATH)" ];then\
-	  echo "\033[93;41m  !!! ERROR !!! EPGIMAGES are activated, you have to set EPGIMAGESPATH   \033[0m";\
-	fi
-	
-	@if [ "$(EPGIMAGES)" = "1" -a "$(EPGIMAGESJPG)" = "1" ]; then\
-	  sed 's/{PresentEventID}.png/{PresentEventID}.jpg/g' -i $(SKIN).skin;\
-	  echo "- EPGIMAGESFORMAT: jpg";\
-	fi
-	
-	@if [ "$(RECORDINGIMAGES)" = "1" ];then\
-	  echo "- RECORDINGIMAGES";\
-	  if [ "$(EPGIMAGESJPG)" = "1" ];then\
-	    echo "- RECORDINGIMAGESFORMAT: jpg";\
-	    sed 's/RECORDINGIMAGENAME.png/RECORDINGIMAGENAME.jpg/g' -i $(SKIN).skin;\
-	  else \
-	    echo "- RECORDINGIMAGESFORMAT: png";\
-	  fi; \
-	  sed 's/RECORDINGIMAGENAME/$(RECORDINGIMAGENAME)/g' -i $(SKIN).skin;\
-	    echo "- RECORDINGIMAGENAME: $(RECORDINGIMAGENAME)";\
-	else \
-	  sed -e '/RECORDINGIMAGES/d' -i $(SKIN).skin ;\
-	  echo "- NO RECORDINGIMAGES";\
-	fi
-	
-	@if [ "$(TIMER-INFO_MAIN-MENU)" = "1" ];then\
-	  echo "- TIMER-INFO_MAIN-MENU";\
-	else\
-	  sed -e '/TIMER-INFO_MAIN-MENU/d' -i $(SKIN).skin ;\
-	  echo "- NO TIMER-INFO_MAIN-MENU";\
-	fi
-		
-	@if [ "$(SMALLMENUFONT)" = "1" ]; then\
-	  sed -e '/DEFAULTMENUFONT/d;/LARGEMENUFONT/d;' -i $(SKIN).skin;\
-	  echo "- SMALLMENUFONT";\
-	fi
-	
-	@if [ "$(DEFAULTMENUFONT)" = "1" ]; then\
-	  sed -e '/SMALLMENUFONT/d;/LARGEMENUFONT/d;' -i $(SKIN).skin;\
-	  echo "- DEFAULTMENUFONT";\
-	fi
-	
-	@if [ "$(LARGEMENUFONT)" = "1" ]; then\
-	  sed -e '/SMALLMENUFONT/d;/DEFAULTMENUFONT/d;' -i $(SKIN).skin;\
-	  echo "- LARGEMENUFONT";\
-	fi
-	
-	@if [ "$(MENUGROUP-CENTER)" = "1" ]; then\
-	  sed -e '/MENUGROUP_LEFT/d;' -i $(SKIN).skin;\
-	  echo "- MENUGROUP_CENTER";\
-	else \
-	  sed -e '/MENUGROUP_CENTER/d;' -i $(SKIN).skin;\
-	  echo "- MENUGROUP_LEFT";\
-	fi	
-		
-	@if [ "$(DIGIT_SIGNAL)" = "1" ]; then\
-	  sed -e '/GRAPH_SIGNAL/d;' -i $(SKIN).skin;\
-	  echo "- DIGIT_SIGNAL";\
-	else \
-	  sed -e '/DIGIT_SIGNAL/d;' -i $(SKIN).skin;\
-	  echo "- GRAPH_SIGNAL";\
-	fi
-		
-	@if [ -x /usr/bin/xmlstarlet ]; then\
-	  echo "------------------> Testing $(SKIN).skin with RELAX NG schema for text2skin";\
-	  echo;\
-	  xmlstarlet val -e -r text2skin-1.1.rng $(SKIN).skin;\
-	  echo;\
-	fi
-
 install-i18n: i18n
 	@mkdir -p $(DESTDIR)$(LOCDIR)
 	@cp -r $(LOCALEDIR)/* $(DESTDIR)$(LOCDIR)
-	
-install: install-i18n 
-	@mkdir -p $(DESTDIR)$(SKINDIR)
-	@cp  $(SKIN).skin $(DESTDIR)$(SKINDIR)
-	@cp  $(SKIN).colors $(DESTDIR)$(SKINDIR)
-	@cp -r images $(DESTDIR)$(SKINDIR)
-	@cp -r mainmenulogos $(DESTDIR)$(SKINDIR)	
-	@cp -r submenulogos $(DESTDIR)$(SKINDIR)	
-	@cp  COPYING $(DESTDIR)$(SKINDIR)
-	@mkdir -p $(DESTDIR)$(THEMESDIR)
+
+install: $(SKIN).skin install-i18n
+	@mkdir -p $(DESTDIR)$(SKINDIR) $(DESTDIR)$(THEMESDIR)
+	@cp $(SKIN).skin $(SKIN).colors COPYING $(DESTDIR)$(SKINDIR)
+	@cp -r images mainmenulogos submenulogos $(DESTDIR)$(SKINDIR)
 	@cp themes/*.theme $(DESTDIR)$(THEMESDIR)
+
+uninstall:
+	@-rm -rf $(DESTDIR)$(SKINDIR)
+	@-rm -f $(addprefix $(DESTDIR)$(THEMESDIR)/,$(notdir $(wildcard themes/*.theme)))
+	@-rm -f $(DESTDIR)$(LOCDIR)/*/LC_MESSAGES/vdr-text2skin-$(SKIN).mo
 
 clean:
 	@-rm -rf $(LOCALEDIR) $(I18Npot) $(SKIN).skin *~
 
-uninstall:
-	@-rm -rf $(DESTDIR)$(SKINDIR)
-
+.PHONY: all i18n install install-i18n uninstall clean

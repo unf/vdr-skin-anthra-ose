@@ -1,5 +1,36 @@
-text2skin-anthra_1920_OSE Revision History
--------------------------------------------
+anthra_OSE Revision History
+---------------------------
+
+2026-11-16: Version 1.0.0
+
+- Port of anthra_1920_OSE 0.0.5 by Tomas Saxer to text2skin 2.0 (skin
+  format 1.2) under the new name anthra_OSE.
+- screenBase abs1920x1080: the skin scales itself to the size of the OSD.
+  Images that were given only with their position get a fixed size, so they
+  scale as well.
+- The build options of Make.config are options of the skin, set at runtime
+  in the setup menu of text2skin: channel logos and their path, separator
+  logos and their path, main menu logos, main menu font, alignment of the
+  group lines in menus, timer info in the main menu, EPG and recording
+  images, signal display.
+- The lists of the menu logos from anthra_conf are part of the skin file
+  (including the entries for the menu of yaVDR), anthra_conf is removed.
+- EPG images and recording images from a scraper plugin (tokens
+  {PresentPoster} and {RecordingPoster}). With an image the title and the
+  info line of a recording end before it.
+- All windows true colour (bpp 32).
+- The video size is shown for UHD as well (from the Debian package). The
+  menu background without menu logos uses an image that exists, four names in
+  the lists of the menu logos are corrected.
+- Makefile: the skin file is put together from xml/*.xml, directories from
+  vdr.pc, option titles and values in the translation template. Removed:
+  Make.config, the generated skin file and its backup, the old RelaxNG
+  schema, compiled translations, the patches folder.
+- Translations in UTF-8, options translated into de, es, fi, fr, it, nl.
+
+
+text2skin-anthra_1920_OSE Revision History (Tomas Saxer)
+---------------------------------------------------------
 
 2014-03-23: Version 0.0.5
 - Some small fixes 

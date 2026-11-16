@@ -1,0 +1,101 @@
+#
+#    README für den Skin anthra_OSE für text2skin
+#
+#    http://anthra.de/anthra-skins/
+#    Copyright (C) 2010 - 2014  Tomas Saxer <tsaxer@gmx.de>
+#    Copyright (C) 2026  Frank Neumann <fnu@vdr-portal.de> (Portierung auf text2skin 2.0)
+#
+#    Dieses Programm ist freie Software; Sie können es unter den Bedingungen der GNU General
+#    Public License, wie von der Free Software Foundation veröffentlicht, weitergeben und/oder
+#    modifizieren, entweder gemäß Version 2 der Lizenz oder (nach Ihrer Option) jeder späteren
+#    Version. Einzelheiten in der Datei COPYING.
+
+anthra_OSE
+==========
+
+anthra ist die dunkle, anthrazitfarbene Skin-Familie für text2skin, die Tomas
+Saxer von 2010 bis 2014 im vdr-portal.de entworfen hat. anthra_OSE ist sein
+anthra_1920_OSE (Version 0.0.5), portiert auf text2skin 2.0; das Design bleibt
+seins. Es ist das schwebende Geschwister von anthra_FSE: Menü und Kanalinfo
+halten Abstand zum Bildschirmrand. Das Original liegt unter
+http://anthra.de/anthra-skins/.
+
+
+Voraussetzungen
+---------------
+
+text2skin ab 2.0 (Skin-Format 1.2). Ein Ausgabegerät mit True-Colour-OSD
+(z. B. softhddevice, vaapivideo); ohne fällt der Skin auf 256 Farben zurück.
+Die Schrift VDRSymbols Sans von Andreas Mair (Debian: vdrsymbols-ttf).
+
+
+Was anders ist als bei anthra_1920_OSE
+--------------------------------------
+
+- Der Skin hat einen neuen Namen, anthra_OSE. Beide Skins lassen sich
+  nebeneinander installieren, die Optionen werden im Setup-Menü neu gesetzt.
+- Keine Bauoptionen und keine Make.config mehr. Der Skin skaliert sich auf
+  die Größe des OSD (entworfen für 1920x1080, getestet mit 1280x720, 1920x1080
+  und 3840x2160); die Optionen werden zur Laufzeit im Setup-Menü von text2skin
+  gesetzt.
+- Die Listen der Menülogos stehen in der Skin-Datei, anthra_conf entfällt. Sie
+  enthalten die Einträge der ursprünglichen Konfiguration, auch die für das
+  Menü von yaVDR.
+- EPG-Bilder und Aufnahmebilder kommen von einem Scraper-Plugin (tvscraper,
+  scraper2vdr) statt aus einem Bilderordner und einem Aufnahme-Hook. Mit Bild
+  enden Titel und Infozeile einer Aufnahme davor.
+- Alle Fenster nutzen True Colour.
+- Die Videogröße wird auch bei UHD angezeigt, der Menühintergrund ohne
+  Menülogos nutzt ein vorhandenes Bild, vier Namen in den Listen der
+  Menülogos sind berichtigt.
+
+
+Optionen
+--------
+
+Einstellungen -> Plugins -> text2skin -> „Optionen des Skins 'anthra_OSE'“:
+
+  Senderlogos                       links    (links, rechts, keine)
+  Pfad der Senderlogos              /var/lib/vdr/channellogos
+  Trennerlogos                      links    (links, rechts, keine)
+  Pfad der Trennerlogos             ../liquid-logos4separator
+  Logos im Hauptmenü                ja
+  Schrift im Hauptmenü              normal   (normal, klein, groß)
+  Gruppenzeilen in Menüs            zentriert (zentriert, links)
+  Timer-Info im Hauptmenü           ja
+  EPG-Bilder (Scraper)              ja
+  Aufnahmebilder (Scraper)          ja
+  Signalanzeige                     Grafik   (Grafik, Zahlen)
+
+Senderlogos werden als <Pfad>/<Sendername>.png oder <Pfad>/<Kanal-ID>.png
+gesucht, Trennerlogos als <Pfad>/<Name des Gruppentrenners in
+channels.conf>.png. Ein relativer Pfad gilt ab dem Ordner des Skins,
+../liquid-logos4separator ist also
+<configdir>/plugins/text2skin/liquid-logos4separator. Die Logofelder haben
+das Format 16:9 (links 260x146, rechts 160x90 Pixel).
+
+Die Themes (Einstellungen -> OSD -> Thema): darkamber, darkblue, darkorange,
+izeman, lightamber, lightblue, lightgrey, lightmaroon, white, yabluedefault,
+yabluelight.
+
+
+Installation
+------------
+
+  make
+  make install
+
+Die Pfade kommen aus vdr.pc, falls vorhanden (Skin: <configdir>/plugins/
+text2skin/anthra_OSE, Themes: <configdir>/themes, Übersetzungen: <locdir>),
+sonst /var/lib/vdr und /usr/share/locale. DESTDIR wird unterstützt.
+
+Die Skin-Datei anthra_OSE.skin wird aus xml/*.xml zusammengesetzt.
+
+
+Übersetzungen
+-------------
+
+Die Texte des Skins stammen aus Tomas Saxers Übersetzungen, Lautstärke und
+Stumm aus den VDR-Quellen. Die Optionen sind ins Deutsche, Spanische,
+Finnische, Französische, Italienische und Niederländische übersetzt, die
+übrigen Sprachen zeigen sie englisch.
