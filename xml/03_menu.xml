@@ -105,7 +105,7 @@
 <!--NOMAINMENULOGOS-->			<rectangle x1="22" x2="23"  y1="7" y2="64"  color="#FF1e1e1e"/>
 <!--NOMAINMENULOGOS-->			<rectangle x1="23" x2="24"  y1="7" y2="63"  color="#FF1e1e1e"/>
 <!--NOMAINMENULOGOS-->			<rectangle x1="25" x2="422"  y1="6" y2="7"  color="Black"/>			
-<!--NOMAINMENULOGOS-->			<image x1="25" x2="472"  y1="8" y2="64"  path="images/menuBGHigh58-4.png"/>
+<!--NOMAINMENULOGOS-->			<image x1="25" x2="472"  y1="8" y2="64"  path="images/menuBGHigh58-3.png"/>
 <!--NOMAINMENULOGOS-->			<rectangle x1="25" x2="472"  y1="64" y2="65"  color="Black"/>
 <!--NOMAINMENULOGOS-->			<rectangle x1="473" x2="474"  y1="5" y2="64"  color="Black"/>				
 <!--NOMAINMENULOGOS-->		</block>
